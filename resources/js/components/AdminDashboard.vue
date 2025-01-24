@@ -87,12 +87,16 @@ export default {
             }
         },
         async updateUserRole(user) {
-            if (user.role_id === 3) {
+            // Vérifiez si l'utilisateur cible est un administrateur (et empêche modification)
+            const originalUser = this.users.find((u) => u.id === user.id); // Trouve les données originales
+            if (originalUser.role_id === 3) {
                 Swal.fire({
-                    icon: "warning",
-                    title: "Rôle Administrateur",
-                    text: "Vous ne pouvez pas modifier directement un administrateur !",
+                    icon: "error",
+                    title: "Action interdite",
+                    text: "Vous ne pouvez pas modifier le rôle d'un autre administrateur.",
                 });
+                // Réinitialise le rôle dans l'interface pour refléter l'état d'origine
+                user.role_id = originalUser.role_id;
                 return;
             }
 
@@ -108,6 +112,8 @@ export default {
                 );
                 Swal.fire("Succès", `Le rôle de ${user.pseudo} a été mis à jour !`, "success");
             } catch (error) {
+                // En cas d'erreur, restaure la valeur originale
+                user.role_id = originalUser.role_id;
                 Swal.fire("Erreur", "Impossible de mettre à jour le rôle.", "error");
             }
         },

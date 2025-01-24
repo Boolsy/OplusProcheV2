@@ -13,13 +13,23 @@ class UserController extends Controller
         return response()->json(['users' => $users]);
     }
 
-    public function updateUserRole(Request $request, $id) {
-        $user = User::findOrFail($id);
-        $user->role_id = $request->input('role_id');
-        $user->save();
+    public function updateUserRole(Request $request, $id)
+    {
+        // Récupère l'utilisateur cible dont on souhaite modifier le rôle
+        $targetUser = User::findOrFail($id);
+
+        // Vérifie si l'utilisateur cible est déjà un administrateur
+        if ($targetUser->role_id === 3) {
+            return response()->json(['error' => "Vous ne pouvez pas modifier le rôle d'un administrateur."], 403);
+        }
+
+        // Met à jour le rôle uniquement si la vérification passe
+        $targetUser->role_id = $request->input('role_id');
+        $targetUser->save();
 
         return response()->json(['message' => 'Rôle mis à jour avec succès']);
     }
+
 
     public function updateUserVIP(Request $request, $id) {
         $user = User::findOrFail($id);

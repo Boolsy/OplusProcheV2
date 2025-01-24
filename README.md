@@ -62,7 +62,6 @@ php artisan db:seed
 ```bash
 php artisan generate:test-data
 ```
-* Vous devez entrez votre nom d'utilisateur pour le compte admin
 * Vous devez ensuite choisir l'adresse mail associé au compte 
 * Définissez votre mot de passe (Les caractères restent invisible dans le CLI)  
 
